@@ -3,3 +3,5 @@ app1/node_modules
 app1/dist
 app2/node_modules
 app2/dist
+yarn.lock
+.DS_Store

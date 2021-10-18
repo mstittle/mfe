@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = require('webpack').container;
 const path = require('path');
+const dependencies = require('./package.json').dependencies;
 
 module.exports = {
   entry: './src/index',
@@ -32,7 +33,26 @@ module.exports = {
       exposes: {
         './App': './src/App',
       },
-      shared: { react: { singleton: true }, 'react-dom': { singleton: true } },
+      shared: {
+        react: {
+          eager: true,
+          singleton: true,
+          requiredVersion: dependencies.react
+        },
+        'react-dom': {
+          eager: true,
+          singleton: true,
+          requiredVersion: dependencies['react-dom']
+        },
+        '@apollo/client': {
+          singleton: true,
+          requiredVersion: dependencies['@apollo/client']
+        },
+        graphql: {
+          singleton: true,
+          requiredVersion: dependencies['graphql']
+        },
+      },
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',

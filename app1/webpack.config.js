@@ -1,7 +1,8 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const {ModuleFederationPlugin} = require("webpack").container;
+const { ModuleFederationPlugin } = require("webpack").container;
 const ExternalTemplateRemotesPlugin = require("external-remotes-plugin");
 const path = require("path");
+const dependencies = require('./package.json').dependencies;
 
 module.exports = {
   entry: "./src/index",
@@ -31,7 +32,26 @@ module.exports = {
       remotes: {
         app2: "app2@[app2Url]/remoteEntry.js",
       },
-      shared: {react: {singleton: true}, "react-dom": {singleton: true}},
+      shared: {
+        react: {
+          eager: true,
+          singleton: true,
+          requiredVersion: dependencies.react
+        },
+        'react-dom': {
+          eager: true,
+          singleton: true,
+          requiredVersion: dependencies['react-dom']
+        },
+        '@apollo/client': {
+          singleton: true,
+          requiredVersion: dependencies['@apollo/client']
+        },
+        graphql: {
+          singleton: true,
+          requiredVersion: dependencies['graphql']
+        },
+      },
     }),
     new ExternalTemplateRemotesPlugin(),
     new HtmlWebpackPlugin({
